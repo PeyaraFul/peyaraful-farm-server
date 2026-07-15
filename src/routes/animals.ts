@@ -171,4 +171,27 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid animal ID" });
+      return;
+    }
+
+    const existing = await animalsCollection().findOne({ _id: new ObjectId(id) });
+    if (!existing) {
+      res.status(404).json({ message: "Animal not found" });
+      return;
+    }
+
+    await animalsCollection().deleteOne({ _id: new ObjectId(id) });
+    res.json({ message: "Animal deleted" });
+  } catch (err) {
+    console.error("Error deleting animal:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;
