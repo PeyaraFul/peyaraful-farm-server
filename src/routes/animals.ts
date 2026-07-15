@@ -44,6 +44,29 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid animal ID" });
+      return;
+    }
+
+    const animal = await animalsCollection().findOne({ _id: new ObjectId(id) });
+
+    if (!animal) {
+      res.status(404).json({ message: "Animal not found" });
+      return;
+    }
+
+    res.json(animal);
+  } catch (err) {
+    console.error("Error fetching animal:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const {
