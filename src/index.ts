@@ -3,6 +3,7 @@ import cors from "cors";
 import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import animalsRoutes from "./routes/animals.js";
+import ordersRoutes from "./routes/orders.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/animals", animalsRoutes);
+app.use("/api/orders", ordersRoutes);
 
 async function start() {
   try {
