@@ -4,6 +4,7 @@ import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import animalsRoutes from "./routes/animals.js";
 import ordersRoutes from "./routes/orders.js";
+import reviewsRoutes from "./routes/reviews.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/animals", animalsRoutes);
 app.use("/api/orders", ordersRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 async function start() {
   try {
