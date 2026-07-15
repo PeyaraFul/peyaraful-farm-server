@@ -119,4 +119,56 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid animal ID" });
+      return;
+    }
+
+    const existing = await animalsCollection().findOne({ _id: new ObjectId(id) });
+    if (!existing) {
+      res.status(404).json({ message: "Animal not found" });
+      return;
+    }
+
+    const { name, type, breed, age, weight, price, color, imageUrl, description, status } = req.body;
+
+    if (type && type !== "cow" && type !== "buffalo") {
+      res.status(400).json({ message: "type must be 'cow' or 'buffalo'" });
+      return;
+    }
+
+    if (status && status !== "available" && status !== "sold") {
+      res.status(400).json({ message: "status must be 'available' or 'sold'" });
+      return;
+    }
+
+    const update: Record<string, unknown> = {};
+    if (name !== undefined) update.name = name;
+    if (type !== undefined) update.type = type;
+    if (breed !== undefined) update.breed = breed;
+    if (age !== undefined) update.age = age;
+    if (weight !== undefined) update.weight = weight;
+    if (price !== undefined) update.price = price;
+    if (color !== undefined) update.color = color;
+    if (imageUrl !== undefined) update.imageUrl = imageUrl;
+    if (description !== undefined) update.description = description;
+    if (status !== undefined) update.status = status;
+
+    await animalsCollection().updateOne(
+      { _id: new ObjectId(id) },
+      { $set: update }
+    );
+
+    const updated = await animalsCollection().findOne({ _id: new ObjectId(id) });
+    res.json({ message: "Animal updated", animal: updated });
+  } catch (err) {
+    console.error("Error updating animal:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;
