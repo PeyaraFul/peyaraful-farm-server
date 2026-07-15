@@ -15,7 +15,7 @@ const animals = [
     weight: 650,
     price: 85000,
     color: "Black & White",
-    imageUrl: "/images/cow1.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?w=600&q=80",
     description:
       "High-yielding dairy cow producing 25+ liters daily. Healthy and well-fed.",
     status: "available",
@@ -29,7 +29,7 @@ const animals = [
     age: 48,
     weight: 450,
     price: 72000,
-    imageUrl: "/images/cow2.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1596733430284-f7437764b1a9?w=600&q=80",
     color: "Reddish Brown",
     description:
       "Desi breed with excellent disease resistance. Great for rural farms.",
@@ -44,7 +44,7 @@ const animals = [
     age: 30,
     weight: 400,
     price: 68000,
-    imageUrl: "/images/cow3.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1570441493514-0cb478d02075?w=600&q=80",
     color: "Light Brown",
     description:
       "Compact Jersey cow with rich milk fat content. Ideal for dairy farms.",
@@ -59,7 +59,7 @@ const animals = [
     age: 42,
     weight: 420,
     price: 65000,
-    imageUrl: "/images/cow4.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1589923188651-268a9765e432?w=600&q=80",
     color: "Deep Red",
     description:
       "Hardy breed adapted to tropical climate. Good milk yield with minimal care.",
@@ -74,7 +74,7 @@ const animals = [
     age: 24,
     weight: 380,
     price: 55000,
-    imageUrl: "/images/cow5.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?w=600&q=80",
     color: "Brown & White",
     description:
       "Young crossbreed with good growth potential. Vaccinated and healthy.",
@@ -89,7 +89,7 @@ const animals = [
     age: 60,
     weight: 700,
     price: 90000,
-    imageUrl: "/images/cow6.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1596733430284-f7437764b1a9?w=600&q=80",
     color: "Black",
     description:
       "Mature HF cow with proven track record. 30+ liters daily production.",
@@ -104,7 +104,7 @@ const animals = [
     age: 36,
     weight: 380,
     price: 78000,
-    imageUrl: "/images/cow7.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1570441493514-0cb478d02075?w=600&q=80",
     color: "Red with White Spots",
     description:
       "Premium Gir breed from Gujarat. Known for A2 milk quality.",
@@ -119,7 +119,7 @@ const animals = [
     age: 54,
     weight: 480,
     price: 70000,
-    imageUrl: "/images/cow8.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1589923188651-268a9765e432?w=600&q=80",
     color: "Greyish White",
     description:
       "Dual-purpose breed for milk and draught. Very calm temperament.",
@@ -134,7 +134,7 @@ const animals = [
     age: 18,
     weight: 320,
     price: 48000,
-    imageUrl: "/images/cow9.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=600&q=80",
     color: "Fawn",
     description:
       "Young heifer ready for first calving. Excellent genetic lineage.",
@@ -149,7 +149,7 @@ const animals = [
     age: 72,
     weight: 500,
     price: 60000,
-    imageUrl: "/images/cow10.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?w=600&q=80",
     color: "Dark Brown",
     description:
       "Experienced mother cow. Still producing well at 6 years.",
@@ -164,7 +164,7 @@ const animals = [
     age: 60,
     weight: 800,
     price: 95000,
-    imageUrl: "/images/buff1.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=600&q=80",
     color: "Jet Black",
     description:
       "Prize-winning Murrah bull. Strong build, excellent for breeding.",
@@ -179,7 +179,7 @@ const animals = [
     age: 48,
     weight: 650,
     price: 82000,
-    imageUrl: "/images/buff2.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1580893445906-4f419fe06a89?w=600&q=80",
     color: "Black",
     description:
       "High milk-producing Murrah buffalo. 15+ liters daily with good fat content.",
@@ -194,7 +194,7 @@ const animals = [
     age: 36,
     weight: 600,
     price: 75000,
-    imageUrl: "/images/buff3.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=600&q=80",
     color: "Black with White Markings",
     description:
       "Premium Nili-Ravi buffalo. Beautiful markings, excellent milk producer.",
@@ -209,7 +209,7 @@ const animals = [
     age: 42,
     weight: 580,
     price: 70000,
-    imageUrl: "/images/buff4.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=600&q=80",
     color: "Dark Grey",
     description:
       "Mehsana breed known for high fat milk. Perfect for butter and ghee production.",
@@ -224,7 +224,7 @@ const animals = [
     age: 54,
     weight: 900,
     price: 110000,
-    imageUrl: "/images/buff5.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1580893445906-4f419fe06a89?w=600&q=80",
     color: "Black",
     description:
       "Massive Jaffarabadi buffalo. Heavy milker with docile nature.",
