@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const { search, type, page = "1", limit = "8" } = req.query;
+    const { search, type, sort = "newest", page = "1", limit = "8" } = req.query;
 
     const filter: Record<string, unknown> = {};
 
@@ -22,10 +22,14 @@ router.get("/", async (req, res) => {
     const limitNum = Math.min(50, Math.max(1, parseInt(limit as string, 10)));
     const skip = (pageNum - 1) * limitNum;
 
+    let sortStage: Record<string, 1 | -1> = { createdAt: -1 };
+    if (sort === "price_asc") sortStage = { price: 1 };
+    else if (sort === "price_desc") sortStage = { price: -1 };
+
     const [animals, total] = await Promise.all([
       animalsCollection()
         .find(filter)
-        .sort({ createdAt: -1 })
+        .sort(sortStage)
         .skip(skip)
         .limit(limitNum)
         .toArray(),
