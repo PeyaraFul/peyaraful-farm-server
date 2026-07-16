@@ -19,6 +19,8 @@ app.get("/api/health", (_req, res) => {
 
 app.all("/api/auth/{*path}", async (req, res) => {
   const auth = getAuth();
+  const url = `${process.env.BASE_URL || "http://localhost:4001"}${req.originalUrl}`;
+  (req as any).url = url;
   await auth.handler(req as any, res as any);
 });
 
