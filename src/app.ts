@@ -18,24 +18,37 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.all("/api/auth/{*path}", async (req, res) => {
-  const auth = getAuth();
-  const baseURL = process.env.BASE_URL || "http://localhost:4001";
-  const url = `${baseURL}${req.originalUrl}`;
-  const headers = new Headers();
-  for (const [key, value] of Object.entries(req.headers)) {
-    if (value) headers.set(key, Array.isArray(value) ? value.join(", ") : value);
+  try {
+    const auth = getAuth();
+    const baseURL = process.env.BASE_URL || "http://localhost:4001";
+    const url = `${baseURL}${req.originalUrl}`;
+
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (value) headers.set(key, Array.isArray(value) ? value.join(", ") : value);
+    }
+
+    let body: BodyInit | undefined = undefined;
+    if (!["GET", "HEAD"].includes(req.method)) {
+      body = JSON.stringify(req.body);
+      if (!headers.has("content-type")) {
+        headers.set("content-type", "application/json");
+      }
+    }
+
+    const request = new Request(url, { method: req.method, headers, body });
+    const response = await auth.handler(request);
+
+    res.status(response.status);
+    response.headers.forEach((value: string, key: string) => {
+      res.setHeader(key, value);
+    });
+    const text = await response.text();
+    res.send(text);
+  } catch (err) {
+    console.error("Auth handler error:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
-  const body = ["GET", "HEAD"].includes(req.method) ? undefined : await new Response(req as any).arrayBuffer();
-  const request = new Request(url, {
-    method: req.method,
-    headers,
-    body: body ? Buffer.from(body) : undefined,
-  });
-  const response = await auth.api.handler(request);
-  res.status(response.status);
-  response.headers.forEach((v, k) => res.setHeader(k, v));
-  const resBody = await response.text();
-  res.send(resBody);
 });
 
 app.use("/api/animals", animalsRoutes);
