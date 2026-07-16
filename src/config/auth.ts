@@ -7,8 +7,9 @@ let _auth: any = null;
 export function getAuth() {
   if (!_auth) {
     _auth = betterAuth({
-      baseURL: process.env.CLIENT_URL || "http://localhost:3000",
+      baseURL: process.env.BASE_URL || "http://localhost:4001",
       secret: process.env.BETTER_AUTH_SECRET!,
+      trustedOrigins: [process.env.CLIENT_URL || "http://localhost:3000"],
       database: mongodbAdapter(getDB()),
       emailAndPassword: {
         enabled: true,
