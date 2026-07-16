@@ -2,15 +2,17 @@ import { Router } from "express";
 import { ObjectId } from "mongodb";
 import { reviewsCollection, type Review } from "../models/review.js";
 import { ordersCollection } from "../models/order.js";
+import { requireSession } from "../middleware/auth.js";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post("/", requireSession, async (req, res) => {
   try {
-    const { userId, animalId, orderId, rating, comment } = req.body;
+    const { animalId, orderId, rating, comment } = req.body;
+    const userId = req.user!.id;
 
-    if (!userId || !animalId || !orderId || !rating) {
-      res.status(400).json({ message: "userId, animalId, orderId, and rating are required" });
+    if (!animalId || !orderId || !rating) {
+      res.status(400).json({ message: "animalId, orderId, and rating are required" });
       return;
     }
 
@@ -99,7 +101,7 @@ router.get("/animal/:animalId", async (req, res) => {
   }
 });
 
-router.get("/check", async (req, res) => {
+router.get("/check", requireSession, async (req, res) => {
   try {
     const { orderId } = req.query;
 

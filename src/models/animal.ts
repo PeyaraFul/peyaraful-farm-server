@@ -11,6 +11,7 @@ export interface Animal {
   price: number;
   color: string;
   imageUrl: string;
+  shortDescription: string;
   description: string;
   status: "available" | "sold";
   sellerId: string;

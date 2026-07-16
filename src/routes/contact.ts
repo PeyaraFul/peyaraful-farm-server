@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { contactMessagesCollection, type ContactMessage } from "../models/contact.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -36,7 +37,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (_req, res) => {
+router.get("/", requireAdmin, async (_req, res) => {
   try {
     const messages = await contactMessagesCollection()
       .find()

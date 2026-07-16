@@ -2,15 +2,17 @@ import { Router } from "express";
 import { ObjectId } from "mongodb";
 import { ordersCollection, type Order } from "../models/order.js";
 import { animalsCollection } from "../models/animal.js";
+import { requireSession, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post("/", requireSession, async (req, res) => {
   try {
-    const { animalId, buyerId } = req.body;
+    const { animalId } = req.body;
+    const buyerId = req.user!.id;
 
-    if (!animalId || !buyerId) {
-      res.status(400).json({ message: "animalId and buyerId are required" });
+    if (!animalId) {
+      res.status(400).json({ message: "animalId is required" });
       return;
     }
 
@@ -68,14 +70,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", requireSession, async (req, res) => {
   try {
-    const { buyerId } = req.query;
-
-    if (!buyerId || typeof buyerId !== "string") {
-      res.status(400).json({ message: "buyerId query parameter is required" });
-      return;
-    }
+    const buyerId = req.user!.id;
 
     const orders = await ordersCollection()
       .find({ buyerId })
@@ -98,7 +95,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/all", async (_req, res) => {
+router.get("/all", requireAdmin, async (_req, res) => {
   try {
     const orders = await ordersCollection()
       .find()
@@ -117,6 +114,72 @@ router.get("/all", async (_req, res) => {
     res.json(ordersWithAnimals);
   } catch (err) {
     console.error("Error fetching all orders:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.patch("/:id/confirm", requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid order ID" });
+      return;
+    }
+
+    const order = await ordersCollection().findOne({ _id: new ObjectId(id) });
+
+    if (!order) {
+      res.status(404).json({ message: "Order not found" });
+      return;
+    }
+
+    if (order.status !== "pending") {
+      res.status(400).json({ message: "Only pending orders can be confirmed" });
+      return;
+    }
+
+    await ordersCollection().updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { status: "paid" } }
+    );
+
+    res.json({ message: "Order confirmed" });
+  } catch (err) {
+    console.error("Error confirming order:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.delete("/:id", requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid order ID" });
+      return;
+    }
+
+    const order = await ordersCollection().findOne({ _id: new ObjectId(id) });
+
+    if (!order) {
+      res.status(404).json({ message: "Order not found" });
+      return;
+    }
+
+    await ordersCollection().updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { status: "cancelled" } }
+    );
+
+    await animalsCollection().updateOne(
+      { _id: new ObjectId(order.animalId) },
+      { $set: { status: "available" } }
+    );
+
+    res.json({ message: "Order cancelled" });
+  } catch (err) {
+    console.error("Error cancelling order:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 });

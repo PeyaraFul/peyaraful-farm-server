@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { ObjectId } from "mongodb";
 import { animalsCollection, type Animal } from "../models/animal.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const { search, type, sort = "newest", page = "1", limit = "8" } = req.query;
+    const { search, type, status, sort = "newest", page = "1", limit = "8" } = req.query;
 
     const filter: Record<string, unknown> = {};
 
@@ -16,6 +17,10 @@ router.get("/", async (req, res) => {
 
     if (type && (type === "cow" || type === "buffalo")) {
       filter.type = type;
+    }
+
+    if (status && (status === "available" || status === "sold")) {
+      filter.status = status;
     }
 
     const pageNum = Math.max(1, parseInt(page as string, 10));
@@ -50,7 +55,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!ObjectId.isValid(id)) {
       res.status(400).json({ message: "Invalid animal ID" });
@@ -71,7 +76,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", requireAdmin, async (req, res) => {
   try {
     const {
       name,
@@ -82,8 +87,8 @@ router.post("/", async (req, res) => {
       price,
       color,
       imageUrl,
+      shortDescription,
       description,
-      sellerId,
     } = req.body;
 
     if (!name || !type || !breed || !price) {
@@ -105,9 +110,10 @@ router.post("/", async (req, res) => {
       price,
       color: color || "",
       imageUrl: imageUrl || "",
+      shortDescription: shortDescription || "",
       description: description || "",
       status: "available",
-      sellerId: sellerId || "",
+      sellerId: req.user!.id,
       createdAt: new Date(),
     };
 
@@ -123,9 +129,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", requireAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!ObjectId.isValid(id)) {
       res.status(400).json({ message: "Invalid animal ID" });
@@ -138,7 +144,7 @@ router.put("/:id", async (req, res) => {
       return;
     }
 
-    const { name, type, breed, age, weight, price, color, imageUrl, description, status } = req.body;
+    const { name, type, breed, age, weight, price, color, imageUrl, shortDescription, description, status } = req.body;
 
     if (type && type !== "cow" && type !== "buffalo") {
       res.status(400).json({ message: "type must be 'cow' or 'buffalo'" });
@@ -159,6 +165,7 @@ router.put("/:id", async (req, res) => {
     if (price !== undefined) update.price = price;
     if (color !== undefined) update.color = color;
     if (imageUrl !== undefined) update.imageUrl = imageUrl;
+    if (shortDescription !== undefined) update.shortDescription = shortDescription;
     if (description !== undefined) update.description = description;
     if (status !== undefined) update.status = status;
 
@@ -175,9 +182,9 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!ObjectId.isValid(id)) {
       res.status(400).json({ message: "Invalid animal ID" });

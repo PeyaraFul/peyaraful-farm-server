@@ -6,6 +6,7 @@ import animalsRoutes from "./routes/animals.js";
 import ordersRoutes from "./routes/orders.js";
 import reviewsRoutes from "./routes/reviews.js";
 import contactRoutes from "./routes/contact.js";
+import favoritesRoutes from "./routes/favorites.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/animals", animalsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/reviews", reviewsRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/favorites", favoritesRoutes);
 
 async function start() {
   try {
