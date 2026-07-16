@@ -19,9 +19,23 @@ app.get("/api/health", (_req, res) => {
 
 app.all("/api/auth/{*path}", async (req, res) => {
   const auth = getAuth();
-  const url = `${process.env.BASE_URL || "http://localhost:4001"}${req.originalUrl}`;
-  (req as any).url = url;
-  await auth.handler(req as any, res as any);
+  const baseURL = process.env.BASE_URL || "http://localhost:4001";
+  const url = `${baseURL}${req.originalUrl}`;
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (value) headers.set(key, Array.isArray(value) ? value.join(", ") : value);
+  }
+  const body = ["GET", "HEAD"].includes(req.method) ? undefined : await new Response(req as any).arrayBuffer();
+  const request = new Request(url, {
+    method: req.method,
+    headers,
+    body: body ? Buffer.from(body) : undefined,
+  });
+  const response = await auth.api.handler(request);
+  res.status(response.status);
+  response.headers.forEach((v, k) => res.setHeader(k, v));
+  const resBody = await response.text();
+  res.send(resBody);
 });
 
 app.use("/api/animals", animalsRoutes);
