@@ -120,7 +120,7 @@ router.get("/all", requireAdmin, async (_req, res) => {
 
 router.patch("/:id/confirm", requireAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!ObjectId.isValid(id)) {
       res.status(400).json({ message: "Invalid order ID" });
@@ -153,7 +153,7 @@ router.patch("/:id/confirm", requireAdmin, async (req, res) => {
 
 router.delete("/:id", requireAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!ObjectId.isValid(id)) {
       res.status(400).json({ message: "Invalid order ID" });

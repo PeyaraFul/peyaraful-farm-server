@@ -77,7 +77,7 @@ router.post("/", requireSession, async (req, res) => {
 
 router.get("/animal/:animalId", async (req, res) => {
   try {
-    const { animalId } = req.params;
+    const animalId = req.params.animalId as string;
 
     if (!ObjectId.isValid(animalId)) {
       res.status(400).json({ message: "Invalid animal ID" });

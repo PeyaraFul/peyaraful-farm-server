@@ -20,7 +20,7 @@ app.get("/api/health", (_req, res) => {
 
 app.all("/api/auth/*", async (req, res) => {
   const auth = getAuth();
-  await auth.handler(req, res);
+  await auth.handler(req as any, res as any);
 });
 
 app.use("/api/animals", animalsRoutes);

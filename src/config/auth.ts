@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { getDB } from "./db.js";
 
-let _auth: ReturnType<typeof betterAuth> | null = null;
+let _auth: any = null;
 
 export function getAuth() {
   if (!_auth) {
