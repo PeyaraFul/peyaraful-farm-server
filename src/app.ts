@@ -17,7 +17,7 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-app.all("/api/auth/*", async (req, res) => {
+app.all("/api/auth/{*path}", async (req, res) => {
   const auth = getAuth();
   await auth.handler(req as any, res as any);
 });
